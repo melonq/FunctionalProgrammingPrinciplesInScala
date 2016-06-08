@@ -110,5 +110,83 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("intersect returns the set of all elements that are both in `s` and `t`.") {
+    new TestSets {
+      val s = union(s1, s2)
+      val t = union(s2, s3)
+
+      val result = intersect(s, t)
+
+      assert(!contains(result, 1), "intersect 1")
+      assert(contains(result, 2), "intersect 2")
+      assert(!contains(result, 3), "intersect 3")
+    }
+  }
+
+  test("diff returns the set of all elements of `s` that are not in `t`.") {
+    new TestSets {
+      val s = union(s1, s2)
+      val t = union(s2, s3)
+
+      val result = diff(s, t)
+
+      assert(contains(result, 1), "diff 1")
+      assert(!contains(result, 2), "diff 2")
+      assert(!contains(result, 3), "diff 3")
+    }
+  }
+
+  test("filter returns the subset of `s` for which `p` holds.") {
+    new TestSets {
+      val s = union(s1, s2)
+
+      val result = filter(s, a => a > 1)
+
+      assert(!contains(result, 1), "filter 1")
+      assert(contains(result, 2), "filter 2")
+    }
+  }
+
+//  Question 2
+  test("forall returns whether all bounded integers within `s` satisfy `p`.") {
+    new TestSets {
+      val s = union(s1, s2)
+
+      assert(!forall(s, _ > 1), "forall 1")
+      assert(forall(s, _ > 0), "forall 2")
+    }
+  }
+
+  test("exists returns whether there exists a bounded integer within `s`.") {
+    new TestSets {
+      val s = union(s1, s2)
+
+      assert(exists(s, _ > 1), "exists 1")
+      assert(exists(s, _ > 0), "exists 2")
+    }
+  }
+
+  test("map returns a set transformed by applying `f` to each element of `s`.") {
+    new TestSets {
+      val s = union(s1, s2)
+
+      val result = map(s, _ + 5)
+
+      assert(!contains(result, 1), "map 1")
+      assert(!contains(result, 2), "map 2")
+      assert(contains(result, 6), "map 3")
+      assert(contains(result, 7), "map 4")
+    }
+  }
+
+  test("toString returns the correct format of stringify `s`") {
+    new TestSets {
+      val s = union(s1, s2)
+
+//      val string = toString(s)
+//      assert(toString(s) == (""), "forall 1")
+    }
+  }
 
 }
+
