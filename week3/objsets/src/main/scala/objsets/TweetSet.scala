@@ -1,5 +1,7 @@
 package objsets
 
+import scala.util.{Failure, Success, Try}
+
 /**
   * A class to represent tweets.
   */
@@ -74,19 +76,9 @@ abstract class TweetSet {
     * Question: Should we implment this method here, or should it remain abstract
     * and be implemented in the subclasses?
     */
-  def descendingByRetweet: TweetList = {
-    def descending(t: TweetSet, acc: TweetList): TweetList = try {
-      descending(t.remove(t.mostRetweeted), new Cons(t.mostRetweeted, acc))
-    } catch {
-      case _: NoSuchElementException => acc
-    }
-
-    //this foreach loop is only used for reverse TweetList
-    var tweetList: TweetList = Nil
-    descending(this, Nil).foreach(x => {
-      tweetList = new Cons(x, tweetList)
-    })
-    tweetList
+  def descendingByRetweet: TweetList = Try(this.mostRetweeted) match {
+    case Success(t) => new Cons(t, this.remove(t).descendingByRetweet)
+    case Failure(_) => Nil
   }
 
   /**
