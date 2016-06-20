@@ -33,6 +33,11 @@ class HuffmanSuite extends FunSuite {
   }
 
 
+  test("times(\"helle\")") {
+    assert(times(List('h', 'e', 'l', 'l', 'e')) === List(('e', 2), ('h', 1), ('l', 2)))
+  }
+
+
   test("makeOrderedLeafList for some frequency table") {
     assert(makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))) === List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 3)))
   }
@@ -47,6 +52,25 @@ class HuffmanSuite extends FunSuite {
   test("decode and encode a very short text should be identity") {
     new TestTrees {
       assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
+    }
+  }
+
+  test("convert should be currectly") {
+    new TestTrees {
+      assert(convert(t1) === List(('a', List(0)), ('b', List(1))))
+    }
+  }
+
+  test("codeBits should be currectly") {
+    new TestTrees {
+      assert(codeBits(convert(t1))('b') === List(1))
+    }
+  }
+
+  test("decode and encode quickcode should be identity") {
+    new TestTrees {
+      assert(codeBits(convert(t1))('a') === quickEncode(t1)(List('a')))
+      assert(encode(t1)("ab".toList) === quickEncode(t1)("ab".toList))
     }
   }
 
