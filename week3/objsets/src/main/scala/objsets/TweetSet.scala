@@ -76,8 +76,8 @@ abstract class TweetSet {
     * Question: Should we implment this method here, or should it remain abstract
     * and be implemented in the subclasses?
     */
-  def descendingByRetweet: TweetList = Try(this.mostRetweeted) match {
-    case Success(t) => new Cons(t, this.remove(t).descendingByRetweet)
+  def descendingByRetweet: TweetList = Try(mostRetweeted) match {
+    case Success(t) => new Cons(t, remove(t).descendingByRetweet)
     case Failure(_) => Nil
   }
 
@@ -146,9 +146,15 @@ class Empty extends TweetSet {
 
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
+//  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
+//    if (p(elem)) right.filterAcc(p, left.filterAcc(p, acc.incl(elem)))
+//    else right.filterAcc(p, left.filterAcc(p, acc))
+//  }
+
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
-    if (p(elem)) right.filterAcc(p, left.filterAcc(p, acc.incl(elem)))
-    else right.filterAcc(p, left.filterAcc(p, acc))
+    (if (p(elem)) acc.incl(elem) else acc)
+      .union(left.filterAcc(p, acc))
+      .union(right.filterAcc(p, acc))
   }
 
   /**
